@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: scalera-traffic-exporter
+    release: kwc-monitoring
+  name: scalera-traffic-exporter
+  namespace: monitoring
+spec:
+  endpoints:
+  - path: /metrics
+    port: metrics
+    scheme: http
+  jobLabel: ajor-scalera
+  namespaceSelector:
+    matchNames:
+    - monitoring
+  selector:
+    matchLabels:
+      app: scalera-traffic-exporter
