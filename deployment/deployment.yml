@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: scalera-traffic-exporter
+  name: scalera-traffic-exporter
+  namespace: monitoring
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: scalera-traffic-exporter
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: scalera-traffic-exporter
+      name: scalera-traffic-exporter
+    spec:
+      containers:
+      - name: scalera-traffic-exporter
+        envFrom:
+        - secretRef:
+            name: scalera-api-secret
+        image: ghcr.io/noorbala7418/scalera-traffic-exporter:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9153
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 50m
+            memory: 64Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

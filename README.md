@@ -10,9 +10,18 @@
 
 ### Run
 
+#### Run on your system
+
 ```bash
 docker run -d -p 9153:9153 -e SCALERA_API_KEY=XXXX -e SCALERA_API_PASSWORD=YYYY \
 -e SCALERA_URL="https://URL:PORT" ghcr.io/noorbala7418/scalera-traffic-exporter:latest
+```
+
+#### Run on your kubernetes cluster
+
+```bash
+kubectl create ns monitoring
+kubectl apply -f ./deployment
 ```
 
 ### Tasks
