@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/go-co-op/gocron"
@@ -17,6 +18,8 @@ import (
 var apiKey = os.Getenv("SCALERA_API_KEY")
 var apiPassword = os.Getenv("SCALERA_API_PASSWORD")
 var scaleraUrl = os.Getenv("SCALERA_URL")
+var scrapeTimeEnv = os.Getenv("SCALERA_SCRAPE_SCHEDULE")
+var scrapeTime int
 
 var (
 	// vmCountMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
@@ -94,8 +97,9 @@ type VMTraffic struct {
 func main() {
 	checkEnvs()
 	logrus.Info("start scalera teraffic exporter")
+	logrus.Info("scrape every ", scrapeTime, " minutes.")
 	c := gocron.NewScheduler(time.UTC)
-	c.Every(5).Minutes().Do(checkStatus)
+	c.Every(scrapeTime).Minutes().Do(checkStatus)
 	c.StartAsync()
 
 	logrus.Info("cron started.")
@@ -222,5 +226,11 @@ func checkEnvs() {
 	if scaleraUrl == "" {
 		logrus.Error("Env SCALERA_URL is not defined.")
 		os.Exit(1)
+	}
+	if scrapeTimeEnv == "" {
+		logrus.Warning("Env SCALERA_SCRAPE_SCHEDULE is not defined.")
+		scrapeTime = 5
+	} else {
+		scrapeTime, _ = strconv.Atoi(scrapeTimeEnv)
 	}
 }
