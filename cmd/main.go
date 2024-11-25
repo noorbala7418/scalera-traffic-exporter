@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -19,7 +20,9 @@ var apiKey = os.Getenv("SCALERA_API_KEY")
 var apiPassword = os.Getenv("SCALERA_API_PASSWORD")
 var scaleraUrl = os.Getenv("SCALERA_URL")
 var scrapeTimeEnv = os.Getenv("SCALERA_SCRAPE_SCHEDULE")
+var insecureSSLCheckStatus = os.Getenv("SCALERA_IGNORE_SSL")
 var scrapeTime int
+var insecureSSLCheck = false
 
 var (
 	// vmCountMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
@@ -117,8 +120,13 @@ func main() {
 
 func getVmList() (VmList, error) {
 	// Start checking site
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSSLCheck},
+	}
+
 	client := &http.Client{
-		Timeout: 15 * time.Second,
+		Timeout:   15 * time.Second,
+		Transport: tr,
 	}
 	url := scaleraUrl + "?act=listvs&api=json&apikey=" + apiKey + "&apipass=" + apiPassword
 	req, err := http.NewRequest("GET", url, nil)
@@ -156,9 +164,13 @@ func checkStatus() {
 
 	logrus.Info("Server gathered. Account ID is: ", vpsID.Username)
 
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSSLCheck},
+	}
 	// Start checking site
 	client := &http.Client{
-		Timeout: 15 * time.Second,
+		Timeout:   15 * time.Second,
+		Transport: tr,
 	}
 	url := scaleraUrl + "?act=vpsmanage&api=json&apikey=" + apiKey + "&apipass=" + apiPassword + "&svs=" + vpsID.VMId
 	req, err := http.NewRequest("GET", url, nil)
@@ -232,5 +244,10 @@ func checkEnvs() {
 		scrapeTime = 5
 	} else {
 		scrapeTime, _ = strconv.Atoi(scrapeTimeEnv)
+	}
+	if insecureSSLCheckStatus == "" {
+		logrus.Warning("Env SCALERA_IGNORE_SSL is not defined. Default is FALSE.")
+	} else {
+		insecureSSLCheck, _ = strconv.ParseBool(insecureSSLCheckStatus)
 	}
 }
