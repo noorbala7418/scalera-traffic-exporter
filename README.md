@@ -14,7 +14,7 @@
 
 ```bash
 docker run -d -p 9153:9153 -e SCALERA_API_KEY=XXXX -e SCALERA_API_PASSWORD=YYYY \
--e SCALERA_URL="https://URL:PORT" -e SCALERA_SCRAPE_SCHEDULE=10 ghcr.io/noorbala7418/scalera-traffic-exporter:latest
+-e SCALERA_URL="https://URL:PORT" -e SCALERA_SCRAPE_SCHEDULE=10 -e SCALERA_IGNORE_SSL=true ghcr.io/noorbala7418/scalera-traffic-exporter:latest
 ```
 
 #### Run on your kubernetes cluster
