@@ -1,20 +1,20 @@
-# Scalera Traffic Exporter
+# Softaculous Traffic Exporter
 
 ## Metrics
 
-- scalera_vm_traffic_total
-- scalera_vm_traffic_free
-- scalera_vm_traffic_used
-- scalera_vm_traffic_free_percent
-- scalera_vm_traffic_used_percent
+- softaculous_vm_traffic_total
+- softaculous_vm_traffic_free
+- softaculous_vm_traffic_used
+- softaculous_vm_traffic_free_percent
+- softaculous_vm_traffic_used_percent
 
 ### Run
 
 #### Run on your system
 
 ```bash
-docker run -d -p 9153:9153 -e SCALERA_API_KEY=XXXX -e SCALERA_API_PASSWORD=YYYY \
--e SCALERA_URL="https://URL:PORT" -e SCALERA_SCRAPE_SCHEDULE=10 -e SCALERA_IGNORE_SSL=true ghcr.io/noorbala7418/scalera-traffic-exporter:latest
+docker run -d -p 9153:9153 -e SOFTACULOUS_API_KEY=XXXX -e SOFTACULOUS_API_PASSWORD=YYYY \
+-e SOFTACULOUS_URL="https://URL:PORT" -e SOFTACULOUS_SCRAPE_SCHEDULE=10 -e SOFTACULOUS_IGNORE_SSL=true ghcr.io/noorbala7418/softaculous-traffic-exporter:latest
 ```
 
 #### Run on your kubernetes cluster

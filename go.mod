@@ -1,4 +1,4 @@
-module github.com/noorbala7418/scalera-exporter
+module github.com/noorbala7418/softaculous-traffic-exporter
 
 go 1.23.0
 

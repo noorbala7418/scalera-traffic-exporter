@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: scalera-traffic-exporter
-  name: scalera-traffic-exporter
+    app: softaculous-traffic-exporter
+  name: softaculous-traffic-exporter
   namespace: monitoring
 spec:
   progressDeadlineSeconds: 600
@@ -11,7 +11,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: scalera-traffic-exporter
+      app: softaculous-traffic-exporter
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -20,15 +20,15 @@ spec:
   template:
     metadata:
       labels:
-        app: scalera-traffic-exporter
-      name: scalera-traffic-exporter
+        app: softaculous-traffic-exporter
+      name: softaculous-traffic-exporter
     spec:
       containers:
-      - name: scalera-traffic-exporter
+      - name: softaculous-traffic-exporter
         envFrom:
         - secretRef:
-            name: scalera-api-secret
-        image: ghcr.io/noorbala7418/scalera-traffic-exporter:latest
+            name: softaculous-api-secret
+        image: ghcr.io/noorbala7418/softaculous-traffic-exporter:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 9153
